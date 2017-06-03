@@ -1,0 +1,49 @@
+// ============================================================================
+// Calc Line Height
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "aleksi/lengths/convert";
+@import "fontscale/_private/get-typescale-entry";
+@import "fontscale/font-settings";
+@import "fontscale/config";
+
+// =_fs-calc-line-height( $fs, $font )
+// ----------------------------------------------------------------------------
+/// Calculate line-height value for given font and context font-size
+///
+/// @param $fs {number} - font-size to calculate line-height for
+/// @param $font {string} - name of font to calculate line-height for
+///
+/// @api private
+/// @since 0.1.0
+
+@function _fs-calc-line-height( $fs, $font )
+{
+  // memoization
+  $_memo_: '_fs-calc-line-height-#{inspect($fs)}-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+  
+  // accept name of entry in $typescale as $size argument
+  @if type-of($fs) == 'string'
+  {
+    $fs: nth(_fs-get-typescale-entry($fs, $font), 1);
+  }
+
+  // adjust line-height to given font
+  $settings: fs-font-settings($font);
+  $min-gap: map-get($settings, 'min-leading-gap');
+
+  // convert parameters for calculations
+  $fs: convert-length($fs, 'px');
+  $base-line-height: convert-length($base-line-height, '', $fs);
+  $min-gap: convert-length($min-gap, 'px', $fs);
+
+  // choose the largest value so font's 'min-leading-gap' is included
+  $lh: max($base-line-height * $fs, $fs + $min-gap);
+
+  // memorize and return calculated line-height
+  @return memo-set('fontscale', $_memo_, $lh);
+}

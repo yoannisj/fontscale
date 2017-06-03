@@ -1,0 +1,57 @@
+// ============================================================================
+// Font Settings
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "aleksi/general/default-to";
+
+// =font-settings( $font )
+// ----------------------------------------------------------------------------
+/// Retrieves the complete list of font-settings for given font.
+///
+/// @param $font {string} - name of the font to retrieve settings for
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-font-settings( $font )
+{
+  // memoization
+  $_memo_: 'fs-font-settings-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // get settings defined in the $fonts map
+  $settings: default-to(map-get($fonts, $font), ());
+
+  // inject default settings
+  $settings: map-merge((
+    'classname': $font,
+    'font-family': $font,
+    'font-size-adjust': 1,
+    'min-leading-gap': 2px
+  ), $settings);
+
+  // memorize and return complete settings map
+  @return memo-set('fontscale', $_memo_, $settings);
+}
+
+// =font-setting( $font )
+// ----------------------------------------------------------------------------
+/// Retrieves a setting for given font.
+///
+/// @param $font {string} - name of the font to retrieve setting for
+/// @param $setting {string} - name of the setting to retrieve
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-font-setting( $font, $setting )
+{
+  // get complete list of settings
+  $settings: fs-font-settings($font);
+
+  // return setting value
+  @return map-get($settings, $setting);
+}

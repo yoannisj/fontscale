@@ -1,0 +1,52 @@
+// ============================================================================
+// Get Typescale Values
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "aleksi/general/default-to";
+
+@import "fontscale/_private/get-typescale-entry";
+@import "fontscale/_private/adjust-font-size";
+@import "fontscale/_private/calc-line-height";
+@import "fontscale/config";
+
+// =_fs-get-typescale-values( $entry, $font )
+// ----------------------------------------------------------------------------
+/// Retrieves the typescale values for given font and type-scale size.
+/// If $entry is a string, it will be used to retrieve and adjust values from
+/// the $typescale global. If $entry is a set of values, they will be adjusted
+/// to the font directly.
+///
+/// @param $entry {string|list|number} - size values to get and/or adjust
+/// @param $font {string} - name of the font to get values for
+///
+/// @return {list|map} - adjusted set of `font-size` and `line-height` values
+///
+/// @api public
+/// @since 0.1.0
+
+@function _fs-get-typescale-values( $entry, $font )
+{
+  // memoization
+  $_memo_: '_fs-get-typescale-values-#{inspect($entry)}-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // accept name of entry in $typescale as $entry argument
+  @if type-of($entry) == 'string' {
+    $entry: _fs-get-typescale-entry($entry, $font);
+  }
+
+  // get font-size from $entry and adjust it to given font
+  $fs: _fs-adjust-font-size(nth($entry, 1), $font);
+
+  // get line-height from $entry or calculate it based on settings
+  $lh: if(length($entry) > 1, nth($entry, 2), _fs-calc-line-height($fs, $font));
+
+  // memorize and return tuple of values
+  @return memo-set('fontscale', $_memo_, (
+    'font-size': $fs,
+    'line-height': $lh
+  ));
+}

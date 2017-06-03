@@ -1,0 +1,55 @@
+// ============================================================================
+// Line Height
+// ============================================================================
+
+@import "fontscale/values";
+
+// =Functions
+// ============================================================================
+
+// =fs-line-height( $font, $entry[, $unit, $from, $to ])
+// ----------------------------------------------------------------------------
+/// Retrieves the line-height value for given font and type-scale entry.
+/// Optionally converts it in the requested unit.
+///
+/// @param $font {string} - name of the font to get value for
+/// @param $entry {string} - type-scale entry to get value from
+/// @param $unit {string} [$line-height-unit] - target unit for converted value
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-line-height($font, $entry, $unit: $line-height-unit, $from: $base-font-size, $to: $from)
+{
+  // get values for given font, size and units
+  $values: fs-values($font, $entry, (
+    'font-size': 'px',
+    'line-height': $unit
+  ), $from, $to);
+
+  @return map-get($values, 'line-height');
+}
+
+// =Mixins
+// ============================================================================
+
+// =fs-line-height( $font, $entry[, $units, $from, $to ])
+// ----------------------------------------------------------------------------
+/// Includes the line-height value for given font and type-scale entry, in
+/// requested unit. Defers to `fs-line-height()` function to get included value.
+///
+/// @param $font {string} - name of the font to get value for
+/// @param $entry {string} - type-scale entry to get value from
+/// @param $unit {string} [$line-height-unit] - target unit for converted value
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @api public
+/// @since 0.1.0
+
+@mixin fs-line-height($font, $entry, $unit: $line-height-unit, $from: $base-font-size, $to: $from)
+{
+  line-height: fs-line-height($font, $entry, $unit, $from, $to);
+}

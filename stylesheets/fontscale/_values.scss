@@ -1,0 +1,69 @@
+// ============================================================================
+// Font Values
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "aleksi/general/default-to";
+
+@import "fontscale/_private/get-typescale-values";
+@import "fontscale/convert-values";
+@import "fontscale/config";
+
+// =Functions
+// ============================================================================
+
+// =fs-values( $font, $entry[, $units, $from, $to ])
+// ----------------------------------------------------------------------------
+/// Retrieves the typescale values for given font and type-scale entry.
+/// If $entry is a string, it will be used to retrieve and adjust values from
+/// the $typescale global. If $entry is a set of values, they will be adjusted
+/// to the font directly (they are considered raw entry values).
+/// Optionally converts adjusted values into requested units.
+///
+/// @param $font {string} - name of the font to get values for
+/// @param $entry {string|list|number} - type-scale entry to get and/or adjust
+/// @param $units {map} [('font-size': $font-size-unit, 'line-height': $line-height-unit )] - units to retrieve values in
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @return {map} - adjusted set of `font-size` and `line-height` values
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-values($font, $entry, $units: null, $from: $base-font-size, $to: $from)
+{
+  // get adjusted values for given font based on config
+  $values: _fs-get-typescale-values($entry, $font);
+
+  // convert adjusted values to requested units
+  $values: fs-convert-values($values, $units, $from, $to);
+
+  @return $values;
+}
+
+// =Mixins
+// ============================================================================
+
+// =fs-values( $font, $entry[, $units, $from, $to ])
+// ----------------------------------------------------------------------------
+/// Includes the typescale values for given font and type-scale entry, in
+/// requested units. Defers to `fs-values()` function to get included values.
+///
+/// @param $font {string} - name of the font to get values for
+/// @param $entry {string|list|number} - type-scale entry to get and/or adjust
+/// @param $units {map} [('font-size': $font-size-unit, 'line-height': $line-height-unit )] - units to retrieve values in
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @api public
+/// @since 0.1.0
+
+@mixin fs-values($font, $entry, $units: null, $from: $base-font-size, $to: $from)
+{
+  // get typescale values for given font and in requested units
+  $values: fs-values($font, $entry, $units, $from, $to);
+
+  font-size: map-get($values, 'font-size');
+  line-height: map-get($values, 'line-height');
+}

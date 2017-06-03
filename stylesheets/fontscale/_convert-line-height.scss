@@ -1,0 +1,32 @@
+// ============================================================================
+// Convert Line Height
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "aleksi/lengths/convert";
+
+// =fs-convert-line-height( $val[, $unit, $from, $to])
+// ----------------------------------------------------------------------------
+/// Converts a line-height value in given unit.
+///
+/// @param $val {number} - line-height value to convert
+/// @param $unit {map} [$line-height-unit] - unit to convert value to
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-convert-line-height($val, $unit: $line-height-unit, $from, $to: $from)
+{
+  // memoization
+  $_memo_: 'fs-convert-line-height-#{inspect($val)}-#{inspect($unit)}-#{inspect($from)}-#{inspect($to)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // delegate to 'convert-length' to convert value
+  $lh: convert-length($val, $unit, $from, $to);
+
+  @return memo-set('fontscale', $_memo_, $lh);
+}

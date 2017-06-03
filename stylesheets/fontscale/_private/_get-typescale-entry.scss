@@ -1,0 +1,41 @@
+// ============================================================================
+// Get Typescale Entry
+// ============================================================================
+
+@import "aleksi/general/throw";
+@import "aleksi/general/memo";
+
+@import "fontscale/_private/adjust-font-size";
+@import "fontscale/_private/calc-line-height";
+@import "fontscale/config";
+
+// =_fs-get-typescale-entry( $name, $font )
+// ----------------------------------------------------------------------------
+/// Returns raw values registered for given typescale entry
+///
+/// @param $name {string} - name of type-scale entry to get
+/// @param $font {string} - name of the font to get entry for
+///
+/// @return corresponding values from the $typescale global
+///
+/// @api public
+/// @since 0.1.0
+
+@function _fs-get-typescale-entry( $name, $font )
+{
+  // memoization
+  $_memo_: '_fs-get-typescale-entry-#{inspect($name)}-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // validate the type-scale entry name
+  @if not map-has-key($typescale, $name) {
+    @return throw-error('_fs-get-typescale-entry(): $name `#{inspect($name)}` could not be found in `$typescale` global');
+  }
+
+  $entry: map-get($typescale, $name);
+
+  // memorize and return tuple of values
+  @return memo-set('fontscale', $_memo_, $entry);
+}

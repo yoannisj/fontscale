@@ -1,0 +1,71 @@
+// ============================================================================
+// Convert Values
+// ============================================================================
+
+@import "aleksi/general/throw";
+@import "aleksi/general/memo";
+@import "aleksi/general/default-to";
+@import "aleksi/lengths/convert";
+@import "fontscale/config";
+
+// =fs-convert-values( $values[, $units, $from, $to])
+// ----------------------------------------------------------------------------
+/// Converts typescale values in given units.
+///
+/// @param $values {list} - tuple of 'font-size' and 'line-height' values to convert
+/// @param $units {map} [('font-size': $font-size-unit, 'line-height': $line-height-unit )] - units to retrieve values in
+/// @param $from {number|string} [$base-font-size] - context font-size to use when converting
+/// @param $to {number|string} [$from] - context font-size to target when converting
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-convert-values($values, $units: null, $from: $base-font-size, $to: $from)
+{
+  // memoization
+  $_memo_: 'fs-convert-values-#{inspect($values)}-#{inspect($units)}-#{inspect($from)}-#{inspect($to)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // validate $values argument
+  $_type: type-of($values);
+  @if $_type != 'list' and $_type != 'map' {
+    @return throw-error('fs-convert-values(): `$values` must be a list or a map – was `#{inspect($values)}`');
+  }
+
+  @else if length($values) != 2 {
+    @return throw-error('fs-convert-values(): `$values` must contain two length values – was `#{inspect($values)}`');
+  }
+
+  @else if $_type == 'list'
+  {
+    $values: (
+      'font-size': nth($values, 1),
+      'line-height': nth($values, 2)
+    );
+  }
+
+  // get default units
+  $units: default-to($units, (
+    'font-size': $font-size-unit,
+    'line-height': $line-height-unit
+  ));
+
+  // get property values from $values
+  $fs: map-get($values, 'font-size');
+  $lh: map-get($values, 'line-height');
+
+  // get font-size in 'px' in order to convert line-height
+  $fs-px: convert-length($fs, 'px', $from, $to);
+
+  // convert property values into requested units
+  $fs: convert-length($fs, map-get($units, 'font-size'), $from, $to);
+  $lh: convert-length($lh, map-get($units, 'line-height'), $fs-px);
+
+  // memorize and return adjusted and converted values
+  @return memo-set('fontscale', $_memo_, (
+    'font-size': $fs,
+    'line-height': $lh
+  ));
+}

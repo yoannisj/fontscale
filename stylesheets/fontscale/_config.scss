@@ -1,0 +1,82 @@
+// ============================================================================
+// Config
+// ============================================================================
+/// Configuration variables used by fontscale
+
+// =$typescale
+// ----------------------------------------------------------------------------
+/// List of named type-scale font-sizes and line-heights
+
+$typescale: (
+
+  'kilo': 64px,
+
+  'alpha': 48px,
+  'beta': 36px,
+  'gamma': 30px,
+  'delta': 24px,
+  'epsilon': 18px,
+
+  'base': 16px,
+
+  'micro': 14px,
+  'nano': 12px
+
+) !default;
+
+// =$font-sizing-unit
+// ----------------------------------------------------------------------------
+/// Map of fonts used in the project, with configuration options
+
+$fonts: (
+  
+  'serif': (
+    'font-family': (Georgia, sans-serif),
+    'font-size-adjust': 1,
+    'min-leading-gap': 2px
+  ),
+
+  'sans-serif': (
+    'font-family': ('Helvetica Neue', Helvetica, Arial, sans-serif),
+    'font-size-adjust': 1,
+    'min-leading-gap': 2px
+  )
+
+);
+
+// =$root-font-size
+// ----------------------------------------------------------------------------
+/// classname to use when including scale at root level
+
+$root-font-size: 16px !default;
+
+// =$base-font-size
+// ----------------------------------------------------------------------------
+/// classname to use when including scale at root level
+
+$base-font-size: $root-font-size !default;
+
+// =$base-line-height
+// ----------------------------------------------------------------------------
+/// classname to use when including scale at root level
+
+$base-line-height: 1.5 !default;
+
+// =$font-size-unit
+// ----------------------------------------------------------------------------
+/// Unit used by default when getting and including font-size values
+
+$font-size-unit: 'rem' !default;
+
+// =$line-height-unit
+// ----------------------------------------------------------------------------
+/// Unit used by default when getting and including line-height values
+/// Set to an empty string to use unitless line-heights
+
+$line-height-unit: '' !default;
+
+// =$scale-classname
+// ----------------------------------------------------------------------------
+/// classname to use when including scale at root level
+
+$fontscale-classname: 'fs';

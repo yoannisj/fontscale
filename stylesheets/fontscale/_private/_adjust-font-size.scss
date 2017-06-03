@@ -1,0 +1,40 @@
+// ============================================================================
+// Adjust Font Size
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "fontscale/_private/get-typescale-entry";
+@import "fontscale/font-settings";
+@import "fontscale/config";
+
+// =_fs-adjust-font-size( $val, $font )
+// ----------------------------------------------------------------------------
+/// Adjusts a font-size value to given font.
+///
+/// @param $val {number|string} font-size value to adjust
+/// @param $font {string} name of the font to adjust $val for
+///
+/// @api private
+/// @since 0.1.0
+
+@function _fs-adjust-font-size( $val, $font )
+{
+  // memoization
+  $_memo_: '_fs-adjust-font-size-#{inspect($val)}-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // accept name of entry in $typescale as $val argument
+  @if type-of($val) == 'string'
+  {
+    $val: nth(_fs-get-typescale-entry($val, $font), 1);
+  }
+
+  // adjust font-size to given font
+  $settings: fs-font-settings($font);
+  $adjust: map-get($settings, 'font-size-adjust');
+
+  // memorize and return adjusted font-size
+  @return memo-set('fontscale', $_memo_, $adjust * $val);
+}

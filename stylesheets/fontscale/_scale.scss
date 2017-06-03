@@ -1,0 +1,91 @@
+// ============================================================================
+// Scale
+// ============================================================================
+
+@import "aleksi/general/memo";
+@import "fontscale/_private/classname";
+@import "fontscale/values";
+@import "fontscale/config";
+
+// =Functions
+// ============================================================================
+
+// =fs-scale( $font )
+// ----------------------------------------------------------------------------
+/// Returns the typescale adapted to given font
+///
+/// @param $font {string} - name of the font to get typescale for
+///
+/// @api public
+/// @since 0.1.0
+
+@function fs-scale( $font )
+{
+  // memoization
+  $_memo_: 'fs-scale-#{inspect($font)}';
+  @if memo-has('fontscale', $_memo_) {
+    @return memo-get('fontscale', $_memo_);
+  }
+
+  // get typescale values for given font
+  $fontscale: ();
+
+  @each $name, $entry in $typescale
+  {
+    $values: fs-values($font, $entry);
+    $fontscale: map-set($fontscale, $anme, $values);
+  }
+
+  @return memo-set('fontscale', $_memo_, $fontscale);
+}
+
+// =Mixins
+// ============================================================================
+
+// =fs-scale( $font )
+// ----------------------------------------------------------------------------
+/// Generates typescale classes for the given font
+///
+/// @param $font {string} - name of the font to get typescale for
+///
+/// @api public
+/// @since 0.1.0
+
+@mixin fs-scale($font, $with-font-name: true)
+{
+  // get current selectors list
+  $selector: &;
+  @if $selector == null {
+    // default to $fontscale-classname at root-level
+    $selector: '.' + $fontscale-classname;
+  }
+
+  @if length($selector) != 1 {
+    $_: throw-error('fs-scale(): can only be included in a single selector, not in `#{inspect($selector)}`');
+  }
+
+  // use the first selector in selector-list
+  $selector: nth($selector, 1);
+
+  // and check if it is either a class or placeholder selector
+  $first-char: str-slice(nth($selector, 1), 1, 1);
+  @if length($selector) != 1 or ($first-char != '.' and $first-char != '%')
+  {
+    $_: throw-error('fs-scale(): can only be included in a class or placeholder selector, not in `#{inspect($selector)}`');
+  }
+
+  @each $name, $entry in $typescale
+  {
+    @at-root
+    {
+      // get scale's classname suffix
+      $suffix: if($with-font-name, _fs-classname($font, $name), _fs-classname(false, $name));
+
+      // create class/placeholder for scale entry
+      #{$selector}-#{$suffix} {
+        // include typescale values for given font and entry
+        @include fs-values($font, $name);
+      }
+    }
+  }
+}

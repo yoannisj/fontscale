@@ -1,0 +1,39 @@
+// ============================================================================
+// Classname suffix
+// ============================================================================
+
+@import "fontscale/font-settings";
+
+// =_fs-classname( $font, $entry )
+// ----------------------------------------------------------------------------
+/// Builds a classname for given font and typescale entry name. If any is set
+/// to null or false, it won't be included in the classname.
+///
+/// @param $font {string} name of font to build classname for
+/// @param $entry {string} name of typescale entry to build classname for
+///
+/// @return {string}
+///
+/// @api private
+/// @since 0.1.0
+
+@function _fs-classname( $font: null, $entry: null )
+{
+  $classname: '';
+
+  // include font classname
+  @if $font
+  {
+    $font-classname: fs-font-setting($font, 'classname');
+    @if $font-classname {
+      $classname: '#{$classname}#{$font-classname}';
+    }
+  }
+
+  // include entry name
+  @if $entry {
+    $classname: if($font, '#{$classname}-#{$entry}', '#{$classname}#{$entry}');
+  }
+
+  @return $classname;
+}
