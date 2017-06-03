@@ -2,6 +2,7 @@
 // Line Height
 // ============================================================================
 
+@import "shift/variable/value";
 @import "fontscale/values";
 
 // =Functions
@@ -29,7 +30,7 @@
     'line-height': $unit
   ), $from, $to);
 
-  @return map-get($values, 'line-height');
+  @return shift-value($values, 'map-get', 'line-height');
 }
 
 // =Mixins
@@ -51,5 +52,6 @@
 
 @mixin fs-line-height($font, $entry, $unit: $line-height-unit, $from: $base-font-size, $to: $from)
 {
-  line-height: fs-line-height($font, $entry, $unit, $from, $to);
+  $lh: fs-line-height($font, $entry, $unit, $from, $to);
+  @include shift-value('line-height', $lh);
 }

@@ -4,6 +4,7 @@
 
 @import "aleksi/general/memo";
 @import "aleksi/general/default-to";
+@import "shift/variable/value";
 
 @import "fontscale/_private/get-typescale-values";
 @import "fontscale/convert-values";
@@ -64,6 +65,6 @@
   // get typescale values for given font and in requested units
   $values: fs-values($font, $entry, $units, $from, $to);
 
-  font-size: map-get($values, 'font-size');
-  line-height: map-get($values, 'line-height');
+  @include shift-value('font-size', $values, 'map-get', 'font-size');
+  @include shift-value('line-height', $values, 'map-get', 'line-height');
 }

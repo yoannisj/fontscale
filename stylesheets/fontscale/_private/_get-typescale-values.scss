@@ -4,6 +4,8 @@
 
 @import "aleksi/general/memo";
 @import "aleksi/general/default-to";
+@import "shift/variable/validate";
+@import "shift/variable/call";
 
 @import "fontscale/_private/get-typescale-entry";
 @import "fontscale/_private/adjust-font-size";
@@ -36,6 +38,12 @@
   // accept name of entry in $typescale as $entry argument
   @if type-of($entry) == 'string' {
     $entry: _fs-get-typescale-entry($entry, $font);
+  }
+
+  // accept shift-values for typescale entry
+  @if shift-validate-variable($entry) {
+    $res: shift-call('_fs-get-typescale-values', $entry, $font);
+    @return memo-set('fontscale', $_memo_, $res);
   }
 
   // get font-size from $entry and adjust it to given font

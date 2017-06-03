@@ -6,6 +6,10 @@
 @import "aleksi/general/memo";
 @import "aleksi/general/default-to";
 @import "aleksi/lengths/convert";
+
+@import "shift/variable/validate";
+@import "shift/variable/call";
+
 @import "fontscale/config";
 
 // =fs-convert-values( $values[, $units, $from, $to])
@@ -26,6 +30,15 @@
   $_memo_: 'fs-convert-values-#{inspect($values)}-#{inspect($units)}-#{inspect($from)}-#{inspect($to)}';
   @if memo-has('fontscale', $_memo_) {
     @return memo-get('fontscale', $_memo_);
+  }
+
+  // accept shift variable for $values, $from and $to
+  @if shift-variable-validate($values)
+    or shift-variable-validate($from)
+    or shift-variable-validate($to)
+  {
+    $res: shift-call('fs-convert-values', $values, $units, $from, $to);
+    @return memo-set('fontscale', $_memo_, $res);
   }
 
   // validate $values argument

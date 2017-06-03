@@ -3,6 +3,8 @@
 // ============================================================================
 
 @import "aleksi/general/memo";
+@import "shift/variable/value";
+
 @import "fontscale/_private/classname";
 @import "fontscale/values";
 @import "fontscale/config";
@@ -33,7 +35,7 @@
   @each $name, $entry in $typescale
   {
     $values: fs-values($font, $entry);
-    $fontscale: map-set($fontscale, $anme, $values);
+    $fontscale: map-set($fontscale, $name, $values);
   }
 
   @return memo-set('fontscale', $_memo_, $fontscale);
@@ -74,7 +76,8 @@
     $_: throw-error('fs-scale(): can only be included in a class or placeholder selector, not in `#{inspect($selector)}`');
   }
 
-  @each $name, $entry in $typescale
+  $fontscale: fs-scale($font);
+  @each $name, $values in $fontscale
   {
     @at-root
     {
@@ -84,7 +87,8 @@
       // create class/placeholder for scale entry
       #{$selector}-#{$suffix} {
         // include typescale values for given font and entry
-        @include fs-values($font, $name);
+        @include shift-value('font-size', $values, 'map-get', 'font-size');
+        @include shift-value('line-height', $values, 'map-get', 'line-height');
       }
     }
   }

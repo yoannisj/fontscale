@@ -2,6 +2,7 @@
 // Font Size
 // ============================================================================
 
+@import "shift/variable/value";
 @import "fontscale/values";
 @import "fontscale/config";
 
@@ -30,7 +31,7 @@
     'line-height': $line-height-unit
   ), $from, $to);
 
-  @return map-get($values, 'font-size');
+  @return shift-value($values, 'map-get', 'font-size');
 }
 
 // =Mixins
@@ -52,5 +53,6 @@
 
 @mixin fs-font-size($font, $entry, $unit: $font-size-unit, $from: $base-font-size, $to: $from)
 {
-  font-size: fs-font-size($font, $entry, $unit, $from, $to);
+  $fs: fs-font-size($font, $entry, $unit, $from, $to);
+  @include shift-value('font-size', $fs);
 }
