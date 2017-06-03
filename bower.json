@@ -1,0 +1,25 @@
+{
+  "name": "fontscale",
+  "description": "Flexible type-scales for sass",
+  "main": "stylesheets/_fontscale.scss",
+  "authors": [
+    "Yoannis Jamar <yoannis.j@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "typography",
+    "type-scale",
+    "webfonts",
+    "responsive",
+    "sass",
+    "stylesheets"
+  ],
+  "homepage": "https://github.com/yoannisj/fontscale",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
